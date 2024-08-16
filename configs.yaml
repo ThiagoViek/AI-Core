@@ -1,0 +1,5 @@
+Agent1:
+  Planner:
+    api-max-retries: 5
+    api-key-filepath: openai.key
+    model-id: "gpt-4o"
