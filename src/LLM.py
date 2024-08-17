@@ -3,21 +3,21 @@ import time
 import openai
 from src.LLMresponse import LLMresponse
 
-class LLMDefault:
+class LLM:
     def __init__(self) -> None:
         self._LLM_client : openai.OpenAI = None
         self._model_id : str = None
         self._max_retries : int = None
 
     def set_key(self, configs : dict) -> None:
-        filepath : str = configs["api-key-filepath"]
+        filepath : str = configs["llm"]["api-key-filepath"]
         with open(filepath,'r') as f:
             key : str = f.read()
             self._LLM_client = openai.Client(api_key=key)
     
     def setup(self, configs : dict) -> None:
-        self._max_retries = configs["api-max-retries"]
-        self._model_id = configs["model-id"]
+        self._max_retries = configs["llm"]["api-max-retries"]
+        self._model_id = configs["llm"]["model-id"]
 
     def queue_attachment(self, message : str, attachment : str) -> dict:
         return {"role": "user", "content": [

@@ -11,4 +11,18 @@ class Agent:
         self._action : AgentAction = None
 
     def setup(self, configs : dict) -> None:
-        pass
+        if "planner" in configs:
+            self._planner = AgentPlanner()
+            self._planner.setup(configs["planner"])
+
+        if "tools" in configs:
+            self._tools = AgentTooling()
+            self._tools.setup(configs["tools"])
+
+        if "memory" in configs:
+            self._memory = AgentMemory()
+            self._memory.setup(configs["memory"])
+
+        if "action" in configs:
+            self._action = AgentAction()
+            self._action.setup(configs["action"])

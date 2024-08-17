@@ -1,5 +1,10 @@
 Agent1:
-  Planner:
-    api-max-retries: 5
-    api-key-filepath: openai.key
-    model-id: "gpt-4o"
+  planner:
+    reflection:
+      llm:
+        api-max-retries: 5
+        api-key-filepath: openai.key
+        model-id: "gpt-4o"
+      instructions:
+        sys-instruction: ./instructions/agent1/planner/sys.prompt
+        user-instruction: ./instructions/agent1/planner/user.prompt
