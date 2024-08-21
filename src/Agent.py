@@ -1,3 +1,4 @@
+from src.AgentInterpreter import AgentInterpreter
 from src.AgentPlanner import AgentPlanner
 from src.AgentTooling import AgentTooling
 from src.AgentMemory import AgentMemory
@@ -5,13 +6,17 @@ from src.AgentAction import AgentAction
 
 class Agent:
     def __init__(self) -> None:
-        # self._interpreter : AgentInterpreter = None
+        self._interpreter : AgentInterpreter = None
         self._planner : AgentPlanner = None
         self._tools : AgentTooling = None
         self._memory : AgentMemory = None
         self._action : AgentAction = None
 
     def setup(self, configs : dict) -> None:
+        if "interpreter" in configs:
+            self._planner = AgentInterpreter()
+            self._planner.setup(configs["interpreter"])
+        
         if "planner" in configs:
             self._planner = AgentPlanner()
             self._planner.setup(configs["planner"])
@@ -27,3 +32,9 @@ class Agent:
         if "action" in configs:
             self._action = AgentAction()
             self._action.setup(configs["action"])
+    
+    def handle_ticket(self,
+            user_id : str,
+            interaction : str
+        ) -> str:
+        pass

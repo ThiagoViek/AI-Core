@@ -1,10 +1,38 @@
-Agent1:
-  planner:
-    reflection:
+tests:
+  agent:
+    interpreter:
       llm:
-        api-max-retries: 5
-        api-key-filepath: openai.key
-        model-id: "gpt-4o"
+        api-key-filepath: ../openai.key
+        model-specs:
+          api-max-retries: 5
+          model-id: "gpt-4o"
       instructions:
-        sys-instruction: ./instructions/agent1/planner/sys.prompt
-        user-instruction: ./instructions/agent1/planner/user.prompt
+        sys-instruction: ../instructions/agent1/interpreter/sys.prompt
+        user-instruction: ../instructions/agent1/interpreter/user.prompt
+    planner:
+      llm:
+        api-key-filepath: ../openai.key
+        model-specs:
+          api-max-retries: 5
+          model-id: "gpt-4o"
+      instructions:
+        sys-instruction: ../instructions/agent1/planner/sys.prompt
+        user-instruction: ../instructions/agent1/planner/user.prompt
+  interpreter:
+    llm:
+      api-key-filepath: ../openai.key
+      model-specs:
+        api-max-retries: 5
+        model-id: "gpt-4o"
+    instructions:
+      sys-instruction: ../instructions/agent1/interpreter/sys.prompt
+      user-instruction: ../instructions/agent1/interpreter/user.prompt
+  planner:
+    llm:
+      api-key-filepath: ../openai.key
+      model-specs:
+        api-max-retries: 5
+        model-id: "gpt-4o"
+    instructions:
+      sys-instruction: ../instructions/agent1/planner/sys.prompt
+      user-instruction: ../instructions/agent1/planner/user.prompt

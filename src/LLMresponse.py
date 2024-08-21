@@ -1,4 +1,5 @@
 import pdb
+import json
 from enums.LLMzoo import LLMzoo
 from enums.ResponseFormat import ResponseFormat
 
@@ -16,12 +17,26 @@ class LLMresponse:
         self._walltime_US : float = 0.0
 
     def __str__(self) -> str:
-        return self._response
+        return json.dumps(
+            {
+                "id":self._id,
+                "status":self._status,
+                "response":self._response,
+                "format":self._response_format,
+                "model":self._model,
+                "input-tokens":self._input_tokens,
+                "output-tokens":self._output_tokens,
+                "walltime-seconds":self._walltime_US * 1e-6
+            }
+        )
 
-    def set_response(self, response, walltime_US : float) -> None:
+    def set_response(self, response, walltime_US : float, format : ResponseFormat) -> None:
+        text : str = response.choices[0].message.content
+        formatted_response = ResponseFormat.convert(text, format)
+
         self._id = response.id
         self._status = 200
-        self._response = response.choices[0].message.content
+        self._response = formatted_response
         self._response_format = ResponseFormat.TEXT
         self._model = response.model
         self._input_tokens = response.usage.prompt_tokens

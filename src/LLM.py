@@ -1,7 +1,9 @@
+import os
 import pdb
 import time
 import openai
 from src.LLMresponse import LLMresponse
+from enums.ResponseFormat import ResponseFormat
 
 class LLM:
     def __init__(self) -> None:
@@ -9,15 +11,14 @@ class LLM:
         self._model_id : str = None
         self._max_retries : int = None
 
-    def set_key(self, configs : dict) -> None:
-        filepath : str = configs["llm"]["api-key-filepath"]
+    def set_key(self, filepath : str) -> None:
         with open(filepath,'r') as f:
             key : str = f.read()
             self._LLM_client = openai.Client(api_key=key)
     
     def setup(self, configs : dict) -> None:
-        self._max_retries = configs["llm"]["api-max-retries"]
-        self._model_id = configs["llm"]["model-id"]
+        self._max_retries = configs["api-max-retries"]
+        self._model_id = configs["model-id"]
 
     def queue_attachment(self, message : str, attachment : str) -> dict:
         return {"role": "user", "content": [
@@ -30,7 +31,7 @@ class LLM:
     def queue_message(self, role : str, message : str) -> dict:
         return {"role":role, "content":message}
     
-    def request(self, prompt : list, max_tokens : int = 4096, temperature : float = 0.2, top_p : float = 1.0) -> LLMresponse:
+    def request(self, prompt : list, format : ResponseFormat, max_tokens : int = 4096, temperature : float = 0.2, top_p : float = 1.0) -> LLMresponse:
         response : LLMresponse = LLMresponse()
         attempts : int = 0
         while attempts < self._max_retries:
@@ -43,7 +44,7 @@ class LLM:
                     max_tokens=max_tokens
                 )
                 walltime_US : float = (time.time() - timestamp_start) * 1e6
-                response.set_response(raw_response, walltime_US)
+                response.set_response(raw_response, walltime_US, format)
                 break
             except Exception as oops:
                 attempts += 1
