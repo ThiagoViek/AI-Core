@@ -1,4 +1,4 @@
-from src.LLMdefault import LLM
+from LLM import LLM
 from src.InstructionReader import InstructionReader
 
 class AgentPlanner:
