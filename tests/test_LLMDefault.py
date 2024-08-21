@@ -3,8 +3,8 @@ import pdb
 import yaml
 
 sys.path.append("../")
-from entities.llm.LLMdefault import LLMDefault
-from entities.llm.LLMresponse import LLMresponse
+from src.LLM import LLM
+from src.LLMresponse import LLMresponse
 
 def read_configs(filepath : str) -> dict:
     with open(filepath,'r') as file:
@@ -20,7 +20,7 @@ if __name__ == "__main__":
     configs : dict = read_configs("../configs.yaml")
     
     # Init LLM
-    llm = LLMDefault()
+    llm = LLM()
     llm.set_key(openai_key)
     llm.setup(configs)
 
