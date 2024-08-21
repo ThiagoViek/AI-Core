@@ -30,6 +30,15 @@ tests:
       instructions-query:
         sys-instruction: ../instructions/agent/planner/sys-queries.prompt
         user-instruction: ../instructions/agent/planner/user-queries.prompt
+    executor:
+      llm:
+        api-key-filepath: ../openai.key
+        model-specs:
+          api-max-retries: 5
+          model-id: "gpt-4o-mini"
+      instructions:
+        sys-instruction: ../instructions/agent/executor/sys.prompt
+        user-instruction: ../instructions/agent/executor/user.prompt
   interpreter:
     llm:
       api-key-filepath: ../openai.key

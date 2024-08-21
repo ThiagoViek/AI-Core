@@ -4,9 +4,7 @@ from src.LLMresponse import LLMresponse
 from src.AgentInterpreter import AgentInterpreter
 from src.AgentDirector import AgentDirector
 from src.AgentPlanner import AgentPlanner
-from src.AgentTooling import AgentTooling
-from src.AgentMemory import AgentMemory
-from src.AgentAction import AgentAction
+from AgentExecutor import AgentExecutor
 from src.AgentPlan import AgentPlan
 
 class Agent:
@@ -14,9 +12,7 @@ class Agent:
         self._interpreter : AgentInterpreter = None
         self._director : AgentDirector = None
         self._planner : AgentPlanner = None
-        self._tools : AgentTooling = None
-        self._memory : AgentMemory = None
-        self._action : AgentAction = None
+        self._executor : AgentExecutor = None
 
     def setup(self, configs : dict) -> None:
         if "interpreter" in configs:
@@ -31,17 +27,9 @@ class Agent:
             self._planner = AgentPlanner()
             self._planner.setup(configs["planner"])
 
-        if "tools" in configs:
-            self._tools = AgentTooling()
-            self._tools.setup(configs["tools"])
-
-        if "memory" in configs:
-            self._memory = AgentMemory()
-            self._memory.setup(configs["memory"])
-
-        if "action" in configs:
-            self._action = AgentAction()
-            self._action.setup(configs["action"])
+        if "executor" in configs:
+            self._executor = AgentExecutor()
+            self._executor.setup(configs["executor"])
     
     def handle_ticket(self, user_id : str, interaction : str) -> str:
         # Create Ticket
@@ -67,3 +55,9 @@ class Agent:
 
             plan : AgentPlan = AgentPlan()
             plan.set(task, response)
+
+            plan_queue.append(plan)
+
+        # Process Solution
+        for plan in plan_queue:
+            response : LLMresponse = self._executor.execute(plan)
