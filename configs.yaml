@@ -28,8 +28,8 @@ tests:
         sys-instruction: ../instructions/agent/planner/sys-contributions.prompt
         user-instruction: ../instructions/agent/planner/user-contributions.prompt
       instructions-query:
-        sys-instruction: ../instructions/agent/planner/sys-query.prompt
-        user-instruction: ../instructions/agent/planner/user-query.prompt
+        sys-instruction: ../instructions/agent/planner/sys-queries.prompt
+        user-instruction: ../instructions/agent/planner/user-queries.prompt
   interpreter:
     llm:
       api-key-filepath: ../openai.key

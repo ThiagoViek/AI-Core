@@ -9,18 +9,10 @@ class AgentPlanner:
     def __init__(self) -> None:
         # LLMs
         self._llm : LLM = None
-        # self._llm_reflection : LLM = None
-        # self._llm_critic : LLM = None
-        # self._llm_chain_of_thought : LLM = None
-        # self._llm_goal_decomp : LLM = None
 
         # Instruction Files
         self._instruction_query : InstructionReader = None
         self._instruction_contribution : InstructionReader = None
-        # self._instructions_reflection : InstructionReader = None
-        # self._instructions_critic : InstructionReader = None
-        # self._instructions_chain_of_thought : InstructionReader = None
-        # self._instructions_goal_decomp : InstructionReader = None
 
     def setup(self, configs : dict) -> None:
         self._llm = LLM()
@@ -31,55 +23,14 @@ class AgentPlanner:
         self._instruction.setup_template_files(configs["instructions-query"])
         self._instruction.setup_template_files(configs["instructions-contributions"])
 
-        # if "reflection" in configs:
-        #     self._llm_reflection = LLM()
-        #     self._instructions_reflection = InstructionReader()
-
-        #     self._llm_reflection.set_key(configs["reflection"])
-        #     self._llm_reflection.setup(configs["reflection"])
-        #     self._instructions_reflection.setup_template_files(configs["reflection"])
-
-        # if "critic" in configs:
-        #     self._llm_critic = LLM()
-        #     self._instructions_critic = InstructionReader()
-
-        #     self._llm_critic.set_key(configs["critic"])
-        #     self._llm_critic.setup(configs["critic"])
-        #     self._instructions_critic.setup_template_files(configs["critic"])
-
-        # if "chain-of-thought" in configs:
-        #     self._llm_chain_of_thought = LLM()
-        #     self._instructions_chain_of_thought = InstructionReader()
-
-        #     self._llm_chain_of_thought.set_key(configs["chain-of-thought"])
-        #     self._llm_chain_of_thought.setup(configs["chain-of-thought"])
-        #     self._instructions_chain_of_thought.setup_template_files(configs["chain-of-thought"])
-
-        # if "goal-decomposition" in configs:
-        #     self._llm_goal_decomp = LLM()
-        #     self._instructions_goal_decomp = InstructionReader()
-
-        #     self._llm_goal_decomp.set_key(configs["goal-decomposition"])
-        #     self._llm_goal_decomp.setup(configs["goal-decomposition"])
-        #     self._instructions_goal_decomp.setup_template_files(configs["goal-decomposition"])
-
-    def plan(self, task_dict : dict) -> LLMresponse:
+    def plan(self, task_dict : dict) -> dict:
         request : str = list(task_dict.keys())[0]
         task : str = task_dict[request]
         if request == "CONTRIBUTION":
-            prompt : list[dict] = []
-            sys_instruction_str : str = self._instruction.sys_instruction
-            sys_instruction : dict = self._llm.queue_message("system",sys_instruction_str)
-            prompt.append(sys_instruction)
-
-            user_instruction_str : str = self._instruction.user_instruction
-            user_instruction_str = user_instruction_str.replace("$interaction",task)
-            user_instruction : dict = self._llm.queue_message("user",user_instruction_str)
-            prompt.append(user_instruction)
-
-            response : LLMresponse = self._llm.request(prompt,ResponseFormat.SLIST)
+            response : LLMresponse = LLMresponse()
+            response.set_response(task,0,ResponseFormat.TEXT)
         if request == "QUERY":
-            prompt : list[dict] = []
+            prompt : list = []
             sys_instruction_str : str = self._instruction.sys_instruction
             sys_instruction : dict = self._llm.queue_message("system",sys_instruction_str)
             prompt.append(sys_instruction)

@@ -7,6 +7,7 @@ from src.AgentPlanner import AgentPlanner
 from src.AgentTooling import AgentTooling
 from src.AgentMemory import AgentMemory
 from src.AgentAction import AgentAction
+from src.AgentPlan import AgentPlan
 
 class Agent:
     def __init__(self) -> None:
@@ -56,6 +57,13 @@ class Agent:
         response : LLMresponse = self._director.break_down(interpreted_interaction)
         ticket.set_director_response(response)
 
-        tasks : list[dict] = ticket.tasks
-        for task in tasks:
-            plan : LLMresponse = self._planner.plan(task)
+        task_queue : list[dict] = ticket.tasks
+        plan_queue : list[AgentPlan] = []
+
+        # TODO: Process Queue concurrently
+        for task in task_queue:
+            response : LLMresponse = self._planner.plan(task)
+            ticket.set_planner_response(response)
+
+            plan : AgentPlan = AgentPlan()
+            plan.set(task, response)
