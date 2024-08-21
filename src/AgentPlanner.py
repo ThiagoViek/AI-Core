@@ -15,7 +15,8 @@ class AgentPlanner:
         # self._llm_goal_decomp : LLM = None
 
         # Instruction Files
-        self._instruction : InstructionReader = None
+        self._instruction_query : InstructionReader = None
+        self._instruction_contribution : InstructionReader = None
         # self._instructions_reflection : InstructionReader = None
         # self._instructions_critic : InstructionReader = None
         # self._instructions_chain_of_thought : InstructionReader = None
@@ -27,7 +28,8 @@ class AgentPlanner:
 
         self._llm.set_key(configs["llm"]["api-key-filepath"])
         self._llm.setup(configs["llm"]["model-specs"])
-        self._instruction.setup_template_files(configs["instructions"])
+        self._instruction.setup_template_files(configs["instructions-query"])
+        self._instruction.setup_template_files(configs["instructions-contributions"])
 
         # if "reflection" in configs:
         #     self._llm_reflection = LLM()
@@ -61,16 +63,31 @@ class AgentPlanner:
         #     self._llm_goal_decomp.setup(configs["goal-decomposition"])
         #     self._instructions_goal_decomp.setup_template_files(configs["goal-decomposition"])
 
-    def plan(self, interaction : str) -> LLMresponse:
-        prompt : list[dict] = []
-        sys_instruction_str : str = self._instruction.sys_instruction
-        sys_instruction : dict = self._llm.queue_message("system",sys_instruction_str)
-        prompt.append(sys_instruction)
+    def plan(self, task_dict : dict) -> LLMresponse:
+        request : str = list(task_dict.keys())[0]
+        task : str = task_dict[request]
+        if request == "CONTRIBUTION":
+            prompt : list[dict] = []
+            sys_instruction_str : str = self._instruction.sys_instruction
+            sys_instruction : dict = self._llm.queue_message("system",sys_instruction_str)
+            prompt.append(sys_instruction)
 
-        user_instruction_str : str = self._instruction.user_instruction
-        user_instruction_str = user_instruction_str.replace("$interaction",interaction)
-        user_instruction : dict = self._llm.queue_message("user",user_instruction_str)
-        prompt.append(user_instruction)
+            user_instruction_str : str = self._instruction.user_instruction
+            user_instruction_str = user_instruction_str.replace("$interaction",task)
+            user_instruction : dict = self._llm.queue_message("user",user_instruction_str)
+            prompt.append(user_instruction)
 
-        response : LLMresponse = self._llm.request(prompt,ResponseFormat.LIST)
+            response : LLMresponse = self._llm.request(prompt,ResponseFormat.SLIST)
+        if request == "QUERY":
+            prompt : list[dict] = []
+            sys_instruction_str : str = self._instruction.sys_instruction
+            sys_instruction : dict = self._llm.queue_message("system",sys_instruction_str)
+            prompt.append(sys_instruction)
+
+            user_instruction_str : str = self._instruction.user_instruction
+            user_instruction_str = user_instruction_str.replace("$interaction",task)
+            user_instruction : dict = self._llm.queue_message("user",user_instruction_str)
+            prompt.append(user_instruction)
+
+            response : LLMresponse = self._llm.request(prompt,ResponseFormat.SLIST)
         return response

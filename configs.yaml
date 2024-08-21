@@ -5,34 +5,46 @@ tests:
         api-key-filepath: ../openai.key
         model-specs:
           api-max-retries: 5
-          model-id: "gpt-4o"
+          model-id: "gpt-4o-mini"
       instructions:
-        sys-instruction: ../instructions/agent1/interpreter/sys.prompt
-        user-instruction: ../instructions/agent1/interpreter/user.prompt
+        sys-instruction: ../instructions/agent/interpreter/sys.prompt
+        user-instruction: ../instructions/agent/interpreter/user.prompt
+    director:
+      llm:
+        api-key-filepath: ../openai.key
+        model-specs:
+          api-max-retries: 5
+          model-id: "gpt-4o-mini"
+      instructions:
+        sys-instruction: ../instructions/agent/director/sys.prompt
+        user-instruction: ../instructions/agent/director/user.prompt
     planner:
       llm:
         api-key-filepath: ../openai.key
         model-specs:
           api-max-retries: 5
-          model-id: "gpt-4o"
-      instructions:
-        sys-instruction: ../instructions/agent1/planner/sys.prompt
-        user-instruction: ../instructions/agent1/planner/user.prompt
+          model-id: "gpt-4o-mini"
+      instructions-contributions:
+        sys-instruction: ../instructions/agent/planner/sys-contributions.prompt
+        user-instruction: ../instructions/agent/planner/user-contributions.prompt
+      instructions-query:
+        sys-instruction: ../instructions/agent/planner/sys-query.prompt
+        user-instruction: ../instructions/agent/planner/user-query.prompt
   interpreter:
     llm:
       api-key-filepath: ../openai.key
       model-specs:
         api-max-retries: 5
-        model-id: "gpt-4o"
+        model-id: "gpt-4o-mini"
     instructions:
-      sys-instruction: ../instructions/agent1/interpreter/sys.prompt
-      user-instruction: ../instructions/agent1/interpreter/user.prompt
+      sys-instruction: ../instructions/agent/interpreter/sys.prompt
+      user-instruction: ../instructions/agent/interpreter/user.prompt
   planner:
     llm:
       api-key-filepath: ../openai.key
       model-specs:
         api-max-retries: 5
-        model-id: "gpt-4o"
+        model-id: "gpt-4o-mini"
     instructions:
-      sys-instruction: ../instructions/agent1/planner/sys.prompt
-      user-instruction: ../instructions/agent1/planner/user.prompt
+      sys-instruction: ../instructions/agent/planner/sys.prompt
+      user-instruction: ../instructions/agent/planner/user.prompt

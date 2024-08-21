@@ -28,7 +28,7 @@ def main():
     # Run inference
     user_id : str = uuid.uuid4()
     interaction : str = input("Enter your problem to be planned: ")
-    response : LLMresponse = agent.handle_ticket(interaction)
+    response : LLMresponse = agent.handle_ticket(user_id, interaction)
     print(response)
 
 if __name__ == "__main__":
