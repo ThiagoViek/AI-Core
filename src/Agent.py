@@ -5,6 +5,7 @@ from src.AgentAction import AgentAction
 
 class Agent:
     def __init__(self) -> None:
+        # self._interpreter : AgentInterpreter = None
         self._planner : AgentPlanner = None
         self._tools : AgentTooling = None
         self._memory : AgentMemory = None
