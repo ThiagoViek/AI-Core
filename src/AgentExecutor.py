@@ -6,12 +6,9 @@ from ExecutionTooling import ExecutionTooling
 from src.AgentPlan import AgentPlan
 from src.LLMresponse import LLMresponse
 from src.InstructionReader import InstructionReader
-from enums.ResponseFormat import ResponseFormat
 
 class AgentExecutor:
     def __init__(self) -> None:
-        # TODO: Add Tooling
-        # TODO: Add Memory
         self._llm : LLM = None
         self._tools : ExecutionTooling = None
         self._memory : ExecutionMemory = None
@@ -33,17 +30,29 @@ class AgentExecutor:
         task : str = plan.task_description
         steps : list[str] = plan.task_list
 
+        execution_report : LLMresponse = None
+        step_documentation : list[dict] = []
+        for step in steps:
+            tooling_context : dict = self._tools.get_context(task, step)
+            memory_context : dict = self._memory.get_context(task, step)
+            step_solution : dict = self._solve(task, step)
+            step_documentation.append({
+                "task-step":step,
+                "tools":tooling_context,
+                "memory":memory_context,
+                "solution":step_solution
+            })
+
         if type == "CONTRIBUTION":
-            # TODO: Check need for data from tools
-            # TODO: Check need for data from memory
-            # TODO: Execute
-            pass
-        elif type == "QUERY":
-            # TODO: Check need for data from tools
-            # TODO: Check need for data from memory
-            # TODO: Execute
-            pass
-        else:
-            raise ValueError(f"Unknown type: {type}")
-        
-        return LLMresponse
+            status : bool = self._upsert(step_documentation)
+        execution_report : LLMresponse = self._report(step_documentation, status)
+        return execution_report
+    
+    def _solve(self, task : str, step : str) -> dict:
+        pass
+
+    def _upsert(self, documentation : list[dict]) -> bool:
+        pass
+
+    def _report(self, documentation : list[dict], status : bool) -> LLMresponse:
+        pass

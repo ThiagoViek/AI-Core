@@ -57,3 +57,16 @@ tests:
     instructions:
       sys-instruction: ../instructions/agent/planner/sys.prompt
       user-instruction: ../instructions/agent/planner/user.prompt
+  executor:
+    llm:
+      api-key-filepath: ../openai.key
+      model-specs:
+        api-max-retries: 5
+        model-id: "gpt-4o-mini"
+    instructions:
+      sys-instruction: ../instructions/agent/planner/sys.prompt
+      user-instruction: ../instructions/agent/planner/user.prompt
+    tools:
+      k: k
+    memory:
+      k: k

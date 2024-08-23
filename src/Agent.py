@@ -59,5 +59,8 @@ class Agent:
             plan_queue.append(plan)
 
         # Process Solution
+        solution_report : list[str] = []
         for plan in plan_queue:
-            response : LLMresponse = self._executor.execute(plan)
+            solution : LLMresponse = self._executor.execute(plan)
+            ticket.set_executor_response(solution)
+            solution_report.append(solution.response)
