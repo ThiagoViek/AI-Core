@@ -6,15 +6,22 @@ from src.AgentDirector import AgentDirector
 from src.AgentPlanner import AgentPlanner
 from AgentExecutor import AgentExecutor
 from src.AgentPlan import AgentPlan
+from src.AgentAdvisor import AgentAdvisor
+from src.AgentRegistry import AgentRegistry
 
-class Agent:
+class AgentGraph:
     def __init__(self) -> None:
+        self._database : AgentRegistry = None
         self._interpreter : AgentInterpreter = None
         self._director : AgentDirector = None
         self._planner : AgentPlanner = None
         self._executor : AgentExecutor = None
+        self._advisor : AgentAdvisor = None
 
     def setup(self, configs : dict) -> None:
+        self._database = AgentRegistry()
+        self._database.setup(configs["registry"])
+
         if "interpreter" in configs:
             self._interpreter = AgentInterpreter()
             self._interpreter.setup(configs["interpreter"])
@@ -30,6 +37,10 @@ class Agent:
         if "executor" in configs:
             self._executor = AgentExecutor()
             self._executor.setup(configs["executor"])
+
+        if "advisor" in configs:
+            self._advisor = AgentExecutor()
+            self._advisor.setup(configs["advisor"])
     
     def handle_ticket(self, user_id : str, interaction : str) -> str:
         # Create Ticket
@@ -58,9 +69,16 @@ class Agent:
 
             plan_queue.append(plan)
 
-        # Process Solution
+        # TODO: Process Solution Concurrently
         solution_report : list[str] = []
         for plan in plan_queue:
             solution : LLMresponse = self._executor.execute(plan)
             ticket.set_executor_response(solution)
             solution_report.append(solution.response)
+
+        # Generate Interaction
+        response : LLMresponse = self._advisor.generate_interaction(solution_report)
+        ticket.set_advisor_response(response)
+
+        # Publish Data
+        self._database.publish(ticket)

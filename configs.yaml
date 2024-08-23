@@ -1,5 +1,7 @@
 tests:
   agent:
+    registry:
+      k: k
     interpreter:
       llm:
         api-key-filepath: ../openai.key
@@ -64,9 +66,18 @@ tests:
         api-max-retries: 5
         model-id: "gpt-4o-mini"
     instructions:
-      sys-instruction: ../instructions/agent/planner/sys.prompt
-      user-instruction: ../instructions/agent/planner/user.prompt
+      sys-instruction: ../instructions/agent/executor/sys.prompt
+      user-instruction: ../instructions/agent/executor/user.prompt
     tools:
       k: k
     memory:
       k: k
+  advisor:
+    llm:
+      api-key-filepath: ../openai.key
+      model-specs:
+        api-max-retries: 5
+        model-id: "gpt-4o-mini"
+    instructions:
+      sys-instruction: ../instructions/agent/advisor/sys.prompt
+      user-instruction: ../instructions/agent/advisor/user.prompt

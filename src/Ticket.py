@@ -10,6 +10,7 @@ class Ticket:
         self._director_response : LLMresponse = None
         self._planner_responses : list[LLMresponse] = None
         self._executor_responses : list[LLMresponse] = None
+        self._advisor_response : LLMresponse = None
         self._parent_ticket : Ticket = None
     
     def create(self, user_id : str, interaction : str) -> None:
@@ -29,6 +30,9 @@ class Ticket:
 
     def set_executor_response(self, response : LLMresponse) -> None:
         self._executor_responses.append(response)
+
+    def set_advisor_response(self, response : LLMresponse) -> None:
+        self._advisor_response = response
 
     @property
     def interpreted_interaction(self) -> str:

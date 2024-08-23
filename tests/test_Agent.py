@@ -7,7 +7,7 @@ import yaml
 sys.path.append("../")
 
 from src.LLMresponse import LLMresponse
-from src.Agent import Agent
+from AgentGraph import AgentGraph
 
 def read_configs(filepath : str) -> dict:
     with open(filepath,'r') as file:
@@ -22,14 +22,13 @@ def main():
     configs : dict = read_configs("../configs.yaml")
     
     # Init Agent Planner
-    agent : Agent = Agent()
-    agent.setup(configs["tests"]["agent"])
+    graph : AgentGraph = AgentGraph()
+    graph.setup(configs["tests"]["agent"])
 
     # Run inference
     user_id : str = uuid.uuid4()
-    interaction : str = input("Enter your problem to be planned: ")
-    response : LLMresponse = agent.handle_ticket(user_id, interaction)
-    print(response)
+    interaction : str = input("Enter your problem to be solved: ")
+    graph.handle_ticket(user_id, interaction)
 
 if __name__ == "__main__":
     main()

@@ -45,6 +45,7 @@ class AgentExecutor:
 
         if type == "CONTRIBUTION":
             status : bool = self._upsert(step_documentation)
+            
         execution_report : LLMresponse = self._report(step_documentation, status)
         return execution_report
     
